@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lily's Typing Adventure 🌟</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Baloo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pink: #FF6B9D;
+            --purple: #C084FC;
+            --blue: #60A5FA;
+            --green: #4ADE80;
+            --yellow: #FBBF24;
+            --orange: #FB923C;
+            --red: #F87171;
+            --sky: #E0F2FE;
+            --cloud: #F0F9FF;
+            --dark: #1E293B;
+            --text: #334155;
+            --gentle-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            --pop-shadow: 0 6px 30px rgba(0,0,0,0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(180deg, #DBEAFE 0%, #FDF2F8 40%, #ECFDF5 70%, #FEF9C3 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: var(--text);
+        }
+
+        /* ===== FLOATING CLOUDS / DECORATIONS ===== */
+        .bg-decor {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .cloud {
+            position: absolute;
+            font-size: 3rem;
+            opacity: 0.3;
+            animation: floatCloud linear infinite;
+        }
+        .cloud:nth-child(1) { top: 5%; left: -10%; animation-duration: 45s; font-size: 4rem; }
+        .cloud:nth-child(2) { top: 15%; left: -10%; animation-duration: 60s; animation-delay: -20s; }
+        .cloud:nth-child(3) { top: 35%; left: -10%; animation-duration: 50s; animation-delay: -10s; font-size: 3.5rem; }
+        .cloud:nth-child(4) { top: 55%; left: -10%; animation-duration: 70s; animation-delay: -35s; }
+        .cloud:nth-child(5) { top: 75%; left: -10%; animation-duration: 55s; animation-delay: -5s; font-size: 2.5rem; }
+
+        @keyframes floatCloud {
+            from { transform: translateX(-100px); }
+            to { transform: translateX(calc(100vw + 100px)); }
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .app {
+            position: relative;
+            z-index: 1;
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 24px 20px 40px;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-family: 'Baloo 2', cursive;
+            font-size: 2.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--pink), var(--purple), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+            text-shadow: none;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+        .header .mascot {
+            font-size: 2.8rem;
+            display: block;
+            margin-bottom: 4px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* ===== STATS ROW ===== */
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .stat-pill {
+            background: white;
+            border-radius: 50px;
+            padding: 8px 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--gentle-shadow);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        .stat-pill .icon { font-size: 1.3rem; }
+        .stat-pill .val {
+            font-family: 'Baloo 2', cursive;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        .stat-pill.stars .val { color: var(--yellow); }
+        .stat-pill.level .val { color: var(--purple); }
+        .stat-pill.streak .val { color: var(--orange); }
+
+        /* ===== ADVENTURE MAP ===== */
+        .adventure-map {
+            background: white;
+            border-radius: 20px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--gentle-shadow);
+            overflow: hidden;
+        }
+        .map-title {
+            font-family: 'Baloo 2', cursive;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--purple);
+            margin-bottom: 10px;
+        }
+        .map-trail {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            overflow-x: auto;
+            padding: 8px 4px;
+            scrollbar-width: none;
+        }
+        .map-trail::-webkit-scrollbar { display: none; }
+        .map-stop {
+            flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            border: 3px solid #E2E8F0;
+            background: #F8FAFC;
+            position: relative;
+            transition: all 0.3s;
+        }
+        .map-stop.completed {
+            border-color: var(--green);
+            background: #DCFCE7;
+            transform: scale(1.05);
+        }
+        .map-stop.current {
+            border-color: var(--yellow);
+            background: #FEF9C3;
+            transform: scale(1.15);
+            box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.25);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.25); }
+            50% { box-shadow: 0 0 0 8px rgba(251, 191, 36, 0.15); }
+        }
+        .map-stop.locked {
+            opacity: 0.5;
+            filter: grayscale(0.5);
+        }
+        .map-connector {
+            flex-shrink: 0;
+            width: 20px;
+            height: 4px;
+            background: #E2E8F0;
+            border-radius: 2px;
+        }
+        .map-connector.done {
+            background: linear-gradient(90deg, var(--green), var(--green));
+        }
+
+        /* ===== TYPING AREA ===== */
+        .typing-card {
+            background: white;
+            border-radius: 24px;
+            padding: 28px 24px 24px;
+            box-shadow: var(--pop-shadow);
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .typing-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--pink), var(--purple), var(--blue), var(--green), var(--yellow));
+        }
+
+        .level-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, #F3E8FF, #EDE9FE);
+            border: 2px solid var(--purple);
+            border-radius: 50px;
+            padding: 5px 14px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #7C3AED;
+            margin-bottom: 16px;
+        }
+
+        .prompt-label {
+            font-weight: 600;
+            color: #94A3B8;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .text-display {
+            background: linear-gradient(135deg, #FEFCE8, #FFF7ED);
+            border: 3px solid #FDE68A;
+            border-radius: 16px;
+            padding: 20px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.65rem;
+            line-height: 2;
+            margin-bottom: 16px;
+            min-height: 70px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            letter-spacing: 0.5px;
+            position: relative;
+        }
+
+        .text-display .char {
+            display: inline;
+            transition: all 0.15s;
+            border-radius: 3px;
+            padding: 0 1px;
+        }
+        .text-display .char.correct {
+            color: #16A34A;
+            background: rgba(74, 222, 128, 0.2);
+        }
+        .text-display .char.incorrect {
+            color: #DC2626;
+            background: rgba(248, 113, 113, 0.25);
+            text-decoration: wavy underline;
+            text-decoration-color: #F87171;
+        }
+        .text-display .char.current {
+            background: rgba(96, 165, 250, 0.35);
+            border-radius: 4px;
+            animation: blink 1s ease-in-out infinite;
+        }
+        @keyframes blink {
+            0%, 100% { background: rgba(96, 165, 250, 0.35); }
+            50% { background: rgba(96, 165, 250, 0.15); }
+        }
+        .text-display .char.pending {
+            color: #94A3B8;
+        }
+
+        /* Progress bar */
+        .progress-wrap {
+            background: #F1F5F9;
+            border-radius: 20px;
+            height: 12px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 20px;
+            background: linear-gradient(90deg, var(--green), #34D399);
+            transition: width 0.3s;
+            position: relative;
+        }
+        .progress-fill::after {
+            content: '⭐';
+            position: absolute;
+            right: -6px;
+            top: -8px;
+            font-size: 1.2rem;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+        }
+
+        .typing-input {
+            width: 100%;
+            padding: 14px 18px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.35rem;
+            border: 3px solid #CBD5E1;
+            border-radius: 14px;
+            transition: all 0.2s;
+            background: #FAFAFA;
+            color: var(--text);
+        }
+        .typing-input:focus {
+            outline: none;
+            border-color: var(--blue);
+            box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.2);
+            background: white;
+        }
+        .typing-input.has-error {
+            border-color: var(--red);
+            box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.15);
+        }
+        .typing-input::placeholder {
+            color: #CBD5E1;
+            font-weight: 400;
+        }
+
+        .hint-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .mini-stats {
+            display: flex;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: #64748B;
+            font-weight: 500;
+        }
+        .mini-stats span { display: flex; align-items: center; gap: 4px; }
+
+        /* ===== BUTTONS ===== */
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 14px;
+            padding: 12px 24px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn:active { transform: scale(0.96); }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            color: white;
+            box-shadow: 0 4px 15px rgba(96, 165, 250, 0.35);
+        }
+        .btn-primary:hover { box-shadow: 0 6px 20px rgba(96, 165, 250, 0.5); transform: translateY(-1px); }
+        .btn-secondary {
+            background: #F1F5F9;
+            color: var(--text);
+        }
+        .btn-secondary:hover { background: #E2E8F0; }
+        .btn-fun {
+            background: linear-gradient(135deg, var(--yellow), var(--orange));
+            color: white;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.35);
+        }
+        .btn-fun:hover { box-shadow: 0 6px 20px rgba(251, 191, 36, 0.5); transform: translateY(-1px); }
+
+        /* ===== CELEBRATION OVERLAY ===== */
+        .celebration {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(4px);
+        }
+        .celebration.show {
+            display: flex;
+        }
+        .celebration-card {
+            background: white;
+            border-radius: 28px;
+            padding: 36px 40px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            max-width: 400px;
+            width: 90%;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popIn {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .celebration-card .big-emoji { font-size: 4rem; display: block; margin-bottom: 8px; }
+        .celebration-card h2 {
+            font-family: 'Baloo 2', cursive;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--purple);
+            margin-bottom: 4px;
+        }
+        .celebration-card .sub { color: #64748B; font-size: 0.95rem; margin-bottom: 16px; }
+        .celebration-card .reward-line {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .celebration-card .reward-item {
+            text-align: center;
+        }
+        .celebration-card .reward-item .r-val {
+            font-family: 'Baloo 2', cursive;
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+        .celebration-card .reward-item .r-label {
+            font-size: 0.75rem;
+            color: #94A3B8;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .new-animal {
+            display: none;
+            background: linear-gradient(135deg, #FEF9C3, #FDE68A);
+            border-radius: 14px;
+            padding: 12px;
+            margin-bottom: 16px;
+            font-weight: 600;
+            color: #92400E;
+        }
+        .new-animal.show { display: block; }
+
+        /* ===== CONFETTI CANVAS ===== */
+        #confetti-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 200;
+        }
+
+        /* ===== ANIMAL COLLECTION ===== */
+        .collection {
+            background: white;
+            border-radius: 20px;
+            padding: 16px 20px;
+            box-shadow: var(--gentle-shadow);
+        }
+        .collection-title {
+            font-family: 'Baloo 2', cursive;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--pink);
+            margin-bottom: 10px;
+        }
+        .animal-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .animal-slot {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background: #F8FAFC;
+            border: 2px dashed #E2E8F0;
+            transition: all 0.3s;
+        }
+        .animal-slot.unlocked {
+            border: 2px solid var(--green);
+            background: #F0FDF4;
+            border-style: solid;
+        }
+        .animal-slot.locked {
+            filter: grayscale(1);
+            opacity: 0.35;
+        }
+        .animal-slot.just-unlocked {
+            animation: animalPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes animalPop {
+            0% { transform: scale(0); }
+            60% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 600px) {
+            .header h1 { font-size: 1.8rem; }
+            .text-display { font-size: 1.3rem; padding: 16px; }
+            .typing-input { font-size: 1.15rem; }
+            .stat-pill { padding: 6px 12px; font-size: 0.85rem; }
+            .celebration-card { padding: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-decor">
+        <div class="cloud">☁️</div>
+        <div class="cloud">☁️</div>
+        <div class="cloud">☁️</div>
+        <div class="cloud">☁️</div>
+        <div class="cloud">☁️</div>
+    </div>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <div class="app">
+        <!-- HEADER -->
+        <div class="header">
+            <span class="mascot" id="mascot">🦊</span>
+            <h1>Lily's Typing Adventure</h1>
+        </div>
+
+        <!-- STATS -->
+        <div class="stats-row">
+            <div class="stat-pill stars">
+                <span class="icon">⭐</span>
+                <span class="val" id="totalStars">0</span>
+            </div>
+            <div class="stat-pill level">
+                <span class="icon">🏔️</span>
+                <span class="val" id="levelName">Level 1</span>
+            </div>
+            <div class="stat-pill streak">
+                <span class="icon">🔥</span>
+                <span class="val" id="streakCount">0</span>
+            </div>
+        </div>
+
+        <!-- ADVENTURE MAP -->
+        <div class="adventure-map">
+            <div class="map-title">🗺️ Adventure Trail</div>
+            <div class="map-trail" id="mapTrail"></div>
+        </div>
+
+        <!-- TYPING CARD -->
+        <div class="typing-card">
+            <div class="level-badge" id="levelBadge">🌱 Letter Garden</div>
+            <div class="prompt-label">Type this:</div>
+            <div class="text-display" id="textDisplay"></div>
+            <div class="progress-wrap">
+                <div class="progress-fill" id="progress" style="width: 0%"></div>
+            </div>
+            <input type="text" class="typing-input" id="typingInput" placeholder="Start typing here..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+            <div class="hint-row">
+                <div class="mini-stats">
+                    <span>⚡ <span id="wpm">0</span> WPM</span>
+                    <span>🎯 <span id="accuracy">100</span>%</span>
+                </div>
+                <div class="btn-row">
+                    <button class="btn btn-secondary" id="skipBtn">Skip ⏭️</button>
+                    <button class="btn btn-primary" id="nextBtn">Next ✨</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ANIMAL COLLECTION -->
+        <div class="collection">
+            <div class="collection-title">🦁 My Animal Friends</div>
+            <div class="animal-grid" id="animalGrid"></div>
+        </div>
+    </div>
+
+    <!-- CELEBRATION -->
+    <div class="celebration" id="celebration">
+        <div class="celebration-card">
+            <span class="big-emoji" id="celebEmoji">🎉</span>
+            <h2 id="celebTitle">Amazing!</h2>
+            <p class="sub" id="celebSub">You typed it perfectly!</p>
+            <div class="reward-line">
+                <div class="reward-item">
+                    <div class="r-val" id="celebStars" style="color: var(--yellow);">+3</div>
+                    <div class="r-label">Stars</div>
+                </div>
+                <div class="reward-item">
+                    <div class="r-val" id="celebWpm" style="color: var(--blue);">8</div>
+                    <div class="r-label">WPM</div>
+                </div>
+                <div class="reward-item">
+                    <div class="r-val" id="celebAcc" style="color: var(--green);">100%</div>
+                    <div class="r-label">Accuracy</div>
+                </div>
+            </div>
+            <div class="new-animal" id="newAnimal">🎁 New friend unlocked: <span id="newAnimalName"></span></div>
+            <button class="btn btn-fun" id="celebNext">Keep Going! 🚀</button>
+        </div>
+    </div>
+
+    <script>
+    // ============================================
+    // GAME CONFIG
+    // ============================================
+    const LEVELS = [
+        {
+            name: "Letter Garden", icon: "🌱", emoji: "🌻",
+            description: "Single letters",
+            generate: () => generateLetters(4)
+        },
+        {
+            name: "Letter Lane", icon: "🌿", emoji: "🌷",
+            description: "More letters",
+            generate: () => generateLetters(6)
+        },
+        {
+            name: "Tiny Words", icon: "🐣", emoji: "🐥",
+            description: "Small words",
+            generate: () => generateFromPool(tinyWords, 2)
+        },
+        {
+            name: "Word Meadow", icon: "🌸", emoji: "🦋",
+            description: "Simple words",
+            generate: () => generateFromPool(simpleWords, 2)
+        },
+        {
+            name: "Word Forest", icon: "🌲", emoji: "🦌",
+            description: "Longer words",
+            generate: () => generateFromPool([...simpleWords, ...mediumWords], 3)
+        },
+        {
+            name: "Silly Sentences", icon: "🤪", emoji: "🦄",
+            description: "Fun short sentences",
+            generate: () => pick(sillySentences)
+        },
+        {
+            name: "Animal Stories", icon: "🦁", emoji: "🐘",
+            description: "Sentences about animals",
+            generate: () => pick(animalSentences)
+        },
+        {
+            name: "Adventure Tales", icon: "🏰", emoji: "🐉",
+            description: "Longer fun sentences",
+            generate: () => pick(adventureSentences)
+        },
+        {
+            name: "Super Typer", icon: "⚡", emoji: "🦸",
+            description: "Real sentences",
+            generate: () => pick(challengeSentences)
+        },
+        {
+            name: "Typing Champion", icon: "👑", emoji: "🏆",
+            description: "You can type anything!",
+            generate: () => pick([...adventureSentences, ...challengeSentences, ...bonusSentences])
+        }
+    ];
+
+    const ADVENTURE_ANIMALS = [
+        "🐱", "🐶", "🐰", "🦊", "🐻", "🐼", "🐨", "🦁",
+        "🐯", "🐸", "🐧", "🦉", "🦋", "🐢", "🐬", "🦄",
+        "🐘", "🦒", "🐙", "🐝", "🦩", "🐳", "🦜", "🐲"
+    ];
+
+    const MASCOTS = ["🦊", "🐱", "🐶", "🐰", "🐼", "🦁", "🦄", "🐻"];
+    const CELEBRATIONS = ["Amazing!", "Wonderful!", "Fantastic!", "Super!", "Brilliant!", "You rock!", "Woo hoo!", "Great job!", "Way to go!", "Incredible!"];
+    const CELEB_EMOJIS = ["🎉", "🌟", "🥳", "✨", "💫", "🎊", "⭐", "🏆", "💖", "🌈"];
+
+    // ===== WORD BANKS =====
+    const tinyWords = ["cat", "dog", "hat", "bat", "sun", "run", "fun", "big", "red", "cup", "map", "hop", "top", "pop", "mom", "dad", "sit", "hit", "pig", "dig", "log", "fog", "pen", "hen", "net", "jet", "bug", "hug", "rug", "mud"];
+
+    const simpleWords = ["fish", "bird", "tree", "cake", "rain", "star", "moon", "book", "jump", "play", "swim", "sing", "pink", "blue", "bear", "frog", "duck", "lion", "ship", "kite", "lamp", "nest", "rock", "wind", "hill", "bell", "drum", "gift", "king", "ring"];
+
+    const mediumWords = ["rabbit", "garden", "castle", "dragon", "cookie", "monkey", "flower", "turtle", "puppet", "rocket", "sunset", "planet", "button", "kitten", "donkey", "pumpkin", "rainbow", "pancake", "penguin", "unicorn"];
+
+    const sillySentences = [
+        "The cat sat on a hat.",
+        "A big red dog ran fast.",
+        "The frog can hop and hop.",
+        "I like cake and ice cream.",
+        "My pet fish is so fun.",
+        "The sun is big and hot.",
+        "A duck can swim in a pond.",
+        "I see a pink pig on a log.",
+        "The cup is on the mat.",
+        "A bug sat on my hand.",
+        "Can a hen run up a hill?",
+        "My mom has a red hat.",
+        "The pop was in my cup.",
+        "I can jump and skip.",
+        "A bat hid in the fog.",
+        "Let me pet that cat.",
+        "The top can spin fast.",
+        "We had fun at the park.",
+        "A bird sat in the nest.",
+        "The bell went ding dong."
+    ];
+
+    const animalSentences = [
+        "The silly penguin danced on ice.",
+        "A fluffy kitten chased a red ball.",
+        "The happy turtle ate a big leaf.",
+        "A brave lion roared at the moon.",
+        "The tiny frog jumped over the rock.",
+        "A lazy panda munched on bamboo.",
+        "The clever fox hid in the bush.",
+        "A baby duck swam in the puddle.",
+        "The funny monkey climbed up a tree.",
+        "A colorful parrot sang a sweet song.",
+        "The rabbit hopped into the garden.",
+        "A friendly dolphin splashed in the sea.",
+        "The owl stayed up way past bedtime.",
+        "A small mouse found a piece of cheese.",
+        "The puppy wagged its fluffy tail.",
+        "A baby bear looked for honey.",
+        "The goldfish blew a tiny bubble.",
+        "A fat bumble bee buzzed around the flowers.",
+        "The giraffe reached the tallest branch.",
+        "A little bird built a cozy nest."
+    ];
+
+    const adventureSentences = [
+        "The dragon guarded a mountain of cupcakes.",
+        "A magical unicorn flew across the rainbow bridge.",
+        "The brave knight found a talking frog in the swamp.",
+        "A friendly robot helped the princess fix her castle.",
+        "The pirate ship sailed through a sea of lemonade.",
+        "A wizard turned the rain into gummy bears.",
+        "The fairy sprinkled stardust on the sleeping forest.",
+        "A secret tunnel led to a room full of kittens.",
+        "The space cat zoomed past the rings of Saturn.",
+        "A tiny elf made shoes out of flower petals.",
+        "The kind mermaid taught the crabs how to dance.",
+        "A flying carpet landed on top of a giant mushroom.",
+        "The queen of the bees threw a garden party.",
+        "A sneaky raccoon stole the cookies from the jar.",
+        "The enchanted book opened a door to a candy land."
+    ];
+
+    const challengeSentences = [
+        "Every morning the baker makes fresh bread for the whole village.",
+        "The children played hide and seek in the garden after school.",
+        "A bright rainbow appeared in the sky after the storm ended.",
+        "My favorite part of the day is reading stories before bed.",
+        "The squirrel gathered acorns and hid them under the old oak tree.",
+        "We built a sandcastle with towers and a moat at the beach.",
+        "The little train chugged up the hill and whistled three times.",
+        "Butterflies love to visit the garden when the flowers are blooming.",
+        "The friendly librarian helped me find a book about dinosaurs.",
+        "On a cold winter night, we made hot chocolate with marshmallows."
+    ];
+
+    const bonusSentences = [
+        "The curious cat explored every corner of the old bookshop.",
+        "A family of ducks crossed the road while everyone waited patiently.",
+        "The astronaut looked out the window and saw the whole Earth below.",
+        "We planted sunflower seeds and watched them grow taller each week.",
+        "The old lighthouse kept ships safe during the strongest storms.",
+        "A gentle breeze carried the scent of fresh cookies from the kitchen.",
+        "The children drew pictures of their favorite animals with bright crayons.",
+        "A shooting star flew across the sky just before midnight.",
+        "The garden gnome seemed to smile whenever the sun came out.",
+        "We found a ladybug with seven spots sitting on a daisy."
+    ];
+
+    // ===== HELPERS =====
+    function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+    function generateLetters(count) {
+        const homeRow = "asdfjkl";
+        const easyLetters = "abcdefghijklmnopqrstuvwxyz";
+        const pool = count <= 4 ? homeRow : easyLetters;
+        let result = [];
+        for (let i = 0; i < count; i++) {
+            result.push(pool[Math.floor(Math.random() * pool.length)]);
+        }
+        return result.join(" ");
+    }
+
+    function generateFromPool(pool, count) {
+        let words = [];
+        for (let i = 0; i < count; i++) {
+            words.push(pick(pool));
+        }
+        return words.join(" ");
+    }
+
+    // ============================================
+    // GAME STATE
+    // ============================================
+    const SAVE_KEY = "lilys-typing-adventure";
+
+    let state = {
+        totalStars: 0,
+        level: 0,          // index into LEVELS
+        streak: 0,
+        bestStreak: 0,
+        exercisesCompleted: 0,
+        unlockedAnimals: [0], // indices into ADVENTURE_ANIMALS
+        starsToNextAnimal: 10,
+        starsSinceLastAnimal: 0,
+        levelProgress: 0    // exercises completed in current level
+    };
+
+    function saveState() {
+        try { localStorage.setItem(SAVE_KEY, JSON.stringify(state)); } catch(e) {}
+    }
+    function loadState() {
+        try {
+            const saved = localStorage.getItem(SAVE_KEY);
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                Object.assign(state, parsed);
+            }
+        } catch(e) {}
+    }
+
+    // ============================================
+    // TYPING ENGINE
+    // ============================================
+    let currentText = "";
+    let currentIndex = 0;
+    let errors = 0;
+    let totalKeystrokes = 0;
+    let startTime = null;
+    let timerInterval = null;
+    let isComplete = false;
+
+    const textDisplay = document.getElementById('textDisplay');
+    const typingInput = document.getElementById('typingInput');
+    const progressBar = document.getElementById('progress');
+    const wpmEl = document.getElementById('wpm');
+    const accuracyEl = document.getElementById('accuracy');
+
+    function renderText() {
+        textDisplay.innerHTML = currentText.split('').map((char, i) => {
+            let cls = 'char';
+            if (i < currentIndex) {
+                cls += typingInput.value[i] === char ? ' correct' : ' incorrect';
+            } else if (i === currentIndex) {
+                cls += ' current pending';
+            } else {
+                cls += ' pending';
+            }
+            return `<span class="${cls}">${char}</span>`;
+        }).join('');
+    }
+
+    function getWPM() {
+        if (!startTime) return 0;
+        const mins = (Date.now() - startTime) / 60000;
+        return mins > 0 ? Math.round((currentIndex / 5) / mins) : 0;
+    }
+
+    function getAccuracy() {
+        return totalKeystrokes > 0 ? Math.round(((totalKeystrokes - errors) / totalKeystrokes) * 100) : 100;
+    }
+
+    function updateDisplay() {
+        wpmEl.textContent = getWPM();
+        accuracyEl.textContent = getAccuracy();
+        const pct = currentText.length > 0 ? (currentIndex / currentText.length) * 100 : 0;
+        progressBar.style.width = pct + '%';
+    }
+
+    function loadExercise() {
+        const lvl = LEVELS[state.level];
+        currentText = lvl.generate();
+        currentIndex = 0;
+        errors = 0;
+        totalKeystrokes = 0;
+        startTime = null;
+        isComplete = false;
+        clearInterval(timerInterval);
+
+        typingInput.value = '';
+        typingInput.disabled = false;
+        typingInput.classList.remove('has-error');
+        progressBar.style.width = '0%';
+        wpmEl.textContent = '0';
+        accuracyEl.textContent = '100';
+
+        renderText();
+        typingInput.focus();
+
+        // Update UI
+        document.getElementById('levelBadge').textContent = `${lvl.icon} ${lvl.name}`;
+        document.getElementById('mascot').textContent = MASCOTS[state.level % MASCOTS.length];
+    }
+
+    function handleInput() {
+        if (isComplete) return;
+        const typed = typingInput.value;
+
+        if (!startTime && typed.length > 0) {
+            startTime = Date.now();
+            timerInterval = setInterval(updateDisplay, 500);
+        }
+
+        const newIndex = typed.length;
+        if (newIndex > currentIndex) {
+            totalKeystrokes++;
+            if (typed[newIndex - 1] !== currentText[newIndex - 1]) {
+                errors++;
+                typingInput.classList.add('has-error');
+                setTimeout(() => typingInput.classList.remove('has-error'), 200);
+            }
+        }
+
+        currentIndex = newIndex;
+        renderText();
+        updateDisplay();
+
+        if (currentIndex >= currentText.length) {
+            completeExercise();
+        }
+    }
+
+    function completeExercise() {
+        isComplete = true;
+        clearInterval(timerInterval);
+        typingInput.disabled = true;
+
+        const wpm = getWPM();
+        const acc = getAccuracy();
+
+        // Calculate stars earned (always at least 1 for finishing!)
+        let starsEarned = 1;
+        if (acc >= 90) starsEarned++;
+        if (acc === 100) starsEarned++;
+        if (wpm >= 8) starsEarned++;
+        if (wpm >= 15) starsEarned++;
+
+        state.totalStars += starsEarned;
+        state.streak++;
+        if (state.streak > state.bestStreak) state.bestStreak = state.streak;
+        state.exercisesCompleted++;
+        state.levelProgress++;
+        state.starsSinceLastAnimal += starsEarned;
+
+        // Check for new animal unlock
+        let newAnimal = null;
+        if (state.starsSinceLastAnimal >= state.starsToNextAnimal && state.unlockedAnimals.length < ADVENTURE_ANIMALS.length) {
+            const nextIndex = state.unlockedAnimals.length;
+            state.unlockedAnimals.push(nextIndex);
+            state.starsSinceLastAnimal = 0;
+            state.starsToNextAnimal = Math.min(state.starsToNextAnimal + 2, 25);
+            newAnimal = ADVENTURE_ANIMALS[nextIndex];
+        }
+
+        // Level up check — every 5 exercises, if accuracy is decent
+        if (state.levelProgress >= 5 && acc >= 70 && state.level < LEVELS.length - 1) {
+            state.level++;
+            state.levelProgress = 0;
+        }
+
+        saveState();
+        showCelebration(starsEarned, wpm, acc, newAnimal);
+        updateAllUI();
+    }
+
+    // ============================================
+    // CELEBRATION & CONFETTI
+    // ============================================
+    function showCelebration(stars, wpm, acc, newAnimal) {
+        document.getElementById('celebEmoji').textContent = pick(CELEB_EMOJIS);
+        document.getElementById('celebTitle').textContent = pick(CELEBRATIONS);
+
+        const sub = acc === 100
+            ? "Perfect! Not a single mistake!"
+            : acc >= 90 ? "So close to perfect!" : "Keep practicing, you're getting better!";
+        document.getElementById('celebSub').textContent = sub;
+
+        document.getElementById('celebStars').textContent = `+${stars}`;
+        document.getElementById('celebWpm').textContent = wpm;
+        document.getElementById('celebAcc').textContent = acc + '%';
+
+        const animalEl = document.getElementById('newAnimal');
+        if (newAnimal) {
+            document.getElementById('newAnimalName').textContent = newAnimal;
+            animalEl.classList.add('show');
+        } else {
+            animalEl.classList.remove('show');
+        }
+
+        document.getElementById('celebration').classList.add('show');
+        fireConfetti();
+    }
+
+    function hideCelebration() {
+        document.getElementById('celebration').classList.remove('show');
+        loadExercise();
+    }
+
+    // ===== CONFETTI =====
+    const confettiCanvas = document.getElementById('confetti-canvas');
+    const ctx = confettiCanvas.getContext('2d');
+    let confettiPieces = [];
+    let confettiAnimId = null;
+
+    function resizeConfetti() {
+        confettiCanvas.width = window.innerWidth;
+        confettiCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeConfetti);
+    resizeConfetti();
+
+    function fireConfetti() {
+        confettiPieces = [];
+        const colors = ['#FF6B9D','#C084FC','#60A5FA','#4ADE80','#FBBF24','#FB923C','#F87171'];
+        for (let i = 0; i < 80; i++) {
+            confettiPieces.push({
+                x: Math.random() * confettiCanvas.width,
+                y: -20 - Math.random() * 200,
+                w: 6 + Math.random() * 6,
+                h: 10 + Math.random() * 10,
+                color: pick(colors),
+                vx: (Math.random() - 0.5) * 4,
+                vy: 2 + Math.random() * 3,
+                rot: Math.random() * 360,
+                rotV: (Math.random() - 0.5) * 10,
+                life: 1
+            });
+        }
+        if (!confettiAnimId) animateConfetti();
+    }
+
+    function animateConfetti() {
+        ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+        confettiPieces.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.05;
+            p.rot += p.rotV;
+            p.life -= 0.005;
+
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rot * Math.PI / 180);
+            ctx.globalAlpha = Math.max(0, p.life);
+            ctx.fillStyle = p.color;
+            ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+            ctx.restore();
+        });
+        confettiPieces = confettiPieces.filter(p => p.life > 0 && p.y < confettiCanvas.height + 50);
+        if (confettiPieces.length > 0) {
+            confettiAnimId = requestAnimationFrame(animateConfetti);
+        } else {
+            ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            confettiAnimId = null;
+        }
+    }
+
+    // ============================================
+    // UI UPDATES
+    // ============================================
+    function updateAllUI() {
+        // Stats pills
+        document.getElementById('totalStars').textContent = state.totalStars;
+        document.getElementById('levelName').textContent = LEVELS[state.level].name;
+        document.getElementById('streakCount').textContent = state.streak;
+
+        // Adventure map
+        renderMap();
+
+        // Animal grid
+        renderAnimals();
+    }
+
+    function renderMap() {
+        const trail = document.getElementById('mapTrail');
+        trail.innerHTML = '';
+        LEVELS.forEach((lvl, i) => {
+            if (i > 0) {
+                const conn = document.createElement('div');
+                conn.className = 'map-connector' + (i <= state.level ? ' done' : '');
+                trail.appendChild(conn);
+            }
+            const stop = document.createElement('div');
+            stop.className = 'map-stop';
+            if (i < state.level) stop.classList.add('completed');
+            else if (i === state.level) stop.classList.add('current');
+            else stop.classList.add('locked');
+            stop.textContent = i <= state.level ? lvl.emoji : '🔒';
+            stop.title = lvl.name;
+            trail.appendChild(stop);
+        });
+
+        // Scroll to current
+        setTimeout(() => {
+            const currentStop = trail.querySelector('.current');
+            if (currentStop) currentStop.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }, 100);
+    }
+
+    function renderAnimals() {
+        const grid = document.getElementById('animalGrid');
+        grid.innerHTML = '';
+        ADVENTURE_ANIMALS.forEach((animal, i) => {
+            const slot = document.createElement('div');
+            slot.className = 'animal-slot';
+            if (state.unlockedAnimals.includes(i)) {
+                slot.classList.add('unlocked');
+                slot.textContent = animal;
+            } else {
+                slot.classList.add('locked');
+                slot.textContent = '❓';
+            }
+            grid.appendChild(slot);
+        });
+    }
+
+    // ============================================
+    // EVENT LISTENERS
+    // ============================================
+    typingInput.addEventListener('input', handleInput);
+    typingInput.addEventListener('paste', e => e.preventDefault());
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+        if (isComplete) {
+            loadExercise();
+        } else {
+            loadExercise(); // just load fresh
+        }
+    });
+
+    document.getElementById('skipBtn').addEventListener('click', () => {
+        state.streak = 0; // lose streak on skip
+        saveState();
+        updateAllUI();
+        loadExercise();
+    });
+
+    document.getElementById('celebNext').addEventListener('click', hideCelebration);
+
+    // Allow closing celebration with Enter key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && document.getElementById('celebration').classList.contains('show')) {
+            hideCelebration();
+        }
+    });
+
+    // ============================================
+    // INIT
+    // ============================================
+    loadState();
+    updateAllUI();
+    loadExercise();
+
+    </script>
+</body>
+</html>
