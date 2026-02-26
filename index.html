@@ -1420,27 +1420,28 @@
 
     function updateStickerProgress() {
         const progressEl = document.getElementById('stickerProgress');
-        const starsLeftEl = document.getElementById('spStarsLeft');
         const barEl = document.getElementById('spBar');
         const fractionEl = document.getElementById('spFraction');
         const infoLabel = progressEl.querySelector('.sp-label');
+        const iconEl = progressEl.querySelector('.sp-icon');
+
+        // Guard against corrupt state
+        if (!state.starsToNextAnimal || state.starsToNextAnimal <= 0) {
+            state.starsToNextAnimal = Math.min(8 + (state.unlockedAnimals.length - 1) * 2, 20);
+        }
 
         if (state.unlockedAnimals.length >= ADVENTURE_ANIMALS.length) {
-            // All stickers collected!
             progressEl.classList.add('all-done');
-            progressEl.querySelector('.sp-icon').textContent = '🎉';
+            iconEl.textContent = '🎉';
             infoLabel.innerHTML = '<span>All friends collected!</span>';
             barEl.style.width = '100%';
             fractionEl.textContent = `${ADVENTURE_ANIMALS.length}/${ADVENTURE_ANIMALS.length}`;
         } else {
             progressEl.classList.remove('all-done');
-            progressEl.querySelector('.sp-icon').textContent = '🎁';
-            const remaining = state.starsToNextAnimal - state.starsSinceLastAnimal;
-            const pct = state.starsToNextAnimal > 0
-                ? Math.min(100, (state.starsSinceLastAnimal / state.starsToNextAnimal) * 100)
-                : 0;
-            starsLeftEl.textContent = Math.max(0, remaining);
-            infoLabel.innerHTML = `Next friend in <span>${Math.max(0, remaining)}</span> ⭐`;
+            iconEl.textContent = '🎁';
+            const remaining = Math.max(0, state.starsToNextAnimal - state.starsSinceLastAnimal);
+            const pct = Math.min(100, (state.starsSinceLastAnimal / state.starsToNextAnimal) * 100);
+            infoLabel.innerHTML = `Next friend in <span>${remaining}</span> ⭐`;
             barEl.style.width = pct + '%';
             fractionEl.textContent = `${state.starsSinceLastAnimal}/${state.starsToNextAnimal}`;
         }
