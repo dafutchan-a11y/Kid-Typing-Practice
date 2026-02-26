@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lily's Typing Adventure 🌟</title>
+    <title>Lily's Typing Adventure 🌟 v4</title>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Baloo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -302,6 +302,107 @@
             font-size: 0.55rem; color: #94A3B8; font-weight: 600;
         }
 
+        /* ===== STICKER PROGRESS TRACKER ===== */
+        .sticker-progress {
+            background: white; border-radius: 16px; padding: 12px 18px;
+            margin-bottom: 20px; box-shadow: var(--gentle-shadow);
+            display: flex; align-items: center; gap: 12px;
+        }
+        .sticker-progress .sp-icon { font-size: 1.6rem; flex-shrink: 0; }
+        .sticker-progress .sp-info { flex: 1; min-width: 0; }
+        .sticker-progress .sp-label {
+            font-weight: 600; font-size: 0.85rem; color: #64748B; margin-bottom: 4px;
+        }
+        .sticker-progress .sp-label span { color: var(--pink); font-weight: 700; }
+        .sticker-progress .sp-bar-wrap {
+            background: #F1F5F9; border-radius: 10px; height: 10px; overflow: hidden;
+        }
+        .sticker-progress .sp-bar-fill {
+            height: 100%; border-radius: 10px;
+            background: linear-gradient(90deg, var(--pink), #F472B6, var(--purple));
+            transition: width 0.4s ease;
+        }
+        .sticker-progress .sp-count {
+            font-family: 'Baloo 2', cursive; font-weight: 700; font-size: 1.1rem;
+            color: var(--pink); flex-shrink: 0; white-space: nowrap;
+        }
+        .sticker-progress.all-done .sp-bar-fill {
+            background: linear-gradient(90deg, var(--green), #34D399);
+        }
+        .sticker-progress.all-done .sp-count { color: var(--green); }
+        .sticker-progress.all-done .sp-label span { color: var(--green); }
+
+        /* ===== PARENT SETTINGS PANEL ===== */
+        .parent-panel h2 {
+            font-family: 'Baloo 2', cursive; font-size: 1.5rem; font-weight: 800;
+            color: var(--purple); margin-bottom: 4px;
+        }
+        .parent-panel .parent-sub {
+            color: #94A3B8; font-size: 0.8rem; margin-bottom: 20px;
+        }
+        .parent-section {
+            text-align: left; background: #F8FAFC; border-radius: 14px;
+            padding: 14px 16px; margin-bottom: 12px;
+        }
+        .parent-section h3 {
+            font-size: 0.85rem; font-weight: 700; color: var(--purple);
+            text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .parent-row {
+            display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        .parent-row:last-child { margin-bottom: 0; }
+        .parent-row label {
+            font-size: 0.85rem; font-weight: 500; color: #475569; min-width: 100px;
+        }
+        .parent-input {
+            font-family: 'Fredoka', sans-serif; font-size: 0.9rem;
+            border: 2px solid #CBD5E1; border-radius: 10px; padding: 6px 12px;
+            background: white; color: var(--text); width: 80px; text-align: center;
+        }
+        .parent-input:focus { outline: none; border-color: var(--purple); }
+        .parent-select {
+            font-family: 'Fredoka', sans-serif; font-size: 0.9rem;
+            border: 2px solid #CBD5E1; border-radius: 10px; padding: 6px 12px;
+            background: white; color: var(--text); flex: 1; max-width: 200px;
+        }
+        .parent-select:focus { outline: none; border-color: var(--purple); }
+        .btn-sm {
+            font-family: 'Fredoka', sans-serif; font-size: 0.8rem; font-weight: 600;
+            border: none; border-radius: 10px; padding: 6px 14px;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .btn-sm:active { transform: scale(0.96); }
+        .btn-sm.purple { background: linear-gradient(135deg, var(--purple), #A855F7); color: white; }
+        .btn-sm.green { background: linear-gradient(135deg, var(--green), #34D399); color: white; }
+        .btn-sm.pink { background: linear-gradient(135deg, var(--pink), #F472B6); color: white; }
+        .btn-sm.red { background: #FEE2E2; color: #DC2626; }
+        .btn-sm.red:hover { background: #FECACA; }
+        .parent-sticker-grid {
+            display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; margin-top: 8px;
+        }
+        .parent-sticker-cell {
+            aspect-ratio: 1; border-radius: 8px; display: flex;
+            align-items: center; justify-content: center; font-size: 1.2rem;
+            cursor: pointer; transition: all 0.2s; border: 2px solid #E2E8F0; background: #F8FAFC;
+        }
+        .parent-sticker-cell.active {
+            border-color: var(--green); background: #DCFCE7;
+        }
+        .parent-sticker-cell:hover { transform: scale(1.1); }
+        .parent-divider {
+            height: 1px; background: #E2E8F0; margin: 16px 0;
+        }
+        .parent-status {
+            font-size: 0.8rem; color: #64748B; font-weight: 500;
+            padding: 4px 0;
+        }
+        .parent-btn-row {
+            display: flex; gap: 8px; justify-content: center; margin-top: 16px; flex-wrap: wrap;
+        }
+
         /* ===== CONFETTI ===== */
         #confetti-canvas {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -373,6 +474,16 @@
         <div class="sticker-btn-row">
             <button class="btn btn-sticker" id="openStickers">🎀 My Sticker Book</button>
         </div>
+
+        <!-- STICKER PROGRESS TRACKER -->
+        <div class="sticker-progress" id="stickerProgress">
+            <div class="sp-icon">🎁</div>
+            <div class="sp-info">
+                <div class="sp-label">Next friend in <span id="spStarsLeft">8</span> ⭐</div>
+                <div class="sp-bar-wrap"><div class="sp-bar-fill" id="spBar" style="width: 0%"></div></div>
+            </div>
+            <div class="sp-count" id="spFraction">0/8</div>
+        </div>
     </div>
 
     <!-- CELEBRATION OVERLAY -->
@@ -400,6 +511,79 @@
             <p class="sticker-count" id="stickerCount">0 of 24 friends found!</p>
             <div class="sticker-grid" id="stickerGrid"></div>
             <button class="btn btn-primary" id="closeStickers">Back to Typing ✨</button>
+        </div>
+    </div>
+
+    <!-- PARENT SETTINGS OVERLAY -->
+    <div class="overlay" id="parentOverlay">
+        <div class="overlay-card parent-panel">
+            <span class="big-emoji">⚙️</span>
+            <h2>Parent Settings</h2>
+            <p class="parent-sub">Tap the title 5× quickly to open this panel</p>
+
+            <!-- WPM Section -->
+            <div class="parent-section">
+                <h3>⚡ Best WPM</h3>
+                <div class="parent-row">
+                    <label>Current best:</label>
+                    <span id="parentWpmDisplay" style="font-weight:700; color:var(--blue);">0 WPM</span>
+                </div>
+                <div class="parent-row">
+                    <label>Set to:</label>
+                    <input type="number" class="parent-input" id="parentWpmInput" min="0" max="200" value="0">
+                    <button class="btn-sm purple" id="parentWpmSet">Set</button>
+                    <button class="btn-sm red" id="parentWpmReset">Reset to 0</button>
+                </div>
+            </div>
+
+            <!-- Level Section -->
+            <div class="parent-section">
+                <h3>🏔️ Current Level</h3>
+                <div class="parent-row">
+                    <label>Set level:</label>
+                    <select class="parent-select" id="parentLevelSelect"></select>
+                    <button class="btn-sm purple" id="parentLevelSet">Set</button>
+                </div>
+            </div>
+
+            <!-- Stickers Section -->
+            <div class="parent-section">
+                <h3>🎀 Stickers</h3>
+                <div class="parent-row">
+                    <label>Quick unlock:</label>
+                    <button class="btn-sm green" id="parentUnlockAll">Unlock All</button>
+                    <button class="btn-sm pink" id="parentUnlockUpTo">Unlock first...</button>
+                </div>
+                <div class="parent-row" id="parentUnlockUpToRow" style="display:none;">
+                    <label>Unlock first</label>
+                    <input type="number" class="parent-input" id="parentUnlockCount" min="1" max="24" value="10">
+                    <span style="font-size:0.85rem;color:#64748B;">stickers</span>
+                    <button class="btn-sm green" id="parentUnlockCountGo">Go</button>
+                </div>
+                <p class="parent-status" id="parentStickerStatus"></p>
+                <div class="parent-sticker-grid" id="parentStickerGrid"></div>
+            </div>
+
+            <!-- Stars Section -->
+            <div class="parent-section">
+                <h3>⭐ Stars</h3>
+                <div class="parent-row">
+                    <label>Total stars:</label>
+                    <input type="number" class="parent-input" id="parentStarsInput" min="0" max="9999" value="0" style="width:90px;">
+                    <button class="btn-sm purple" id="parentStarsSet">Set</button>
+                </div>
+            </div>
+
+            <div class="parent-divider"></div>
+
+            <!-- Danger Zone -->
+            <div class="parent-row" style="justify-content:center;">
+                <button class="btn-sm red" id="parentFullReset">🗑️ Full Reset (erase everything)</button>
+            </div>
+
+            <div class="parent-btn-row">
+                <button class="btn btn-primary" id="closeParent">Done ✨</button>
+            </div>
         </div>
     </div>
 
@@ -656,7 +840,37 @@
         "We learned so many interesting facts at the museum today! Did you know that some dinosaurs were as small as chickens?",
         "The whole class worked together to put on a play for their families. Everyone clapped and cheered at the end!",
         "Would you rather fly like a bird or swim like a fish? That is a really hard question to answer!",
-        "The kite soared high above the trees, dancing in the wind. What a perfect way to spend a breezy afternoon!"
+        "The kite soared high above the trees, dancing in the wind. What a perfect way to spend a breezy afternoon!",
+        "The children built a snow fort in the backyard, and spent the whole afternoon having the most epic snowball fight ever!",
+        "A tiny kitten climbed all the way to the top of the tall bookshelf. How did she get up there so fast?",
+        "The magician pulled a rabbit out of his hat, and the entire audience gasped in surprise. What an incredible trick!",
+        "We found a secret path behind the waterfall that led to a hidden cave. It felt like a real adventure!",
+        "The teacher surprised the class with a pizza party on the last day of school. Everyone cheered and clapped!",
+        "Have you ever tried to count all the stars in the night sky? There are more than anyone could ever count!",
+        "The friendly dolphin swam alongside our boat for almost a mile, jumping and splashing the whole way. It was so exciting!",
+        "My little brother learned to tie his shoes all by himself today. We were so proud of him!",
+        "The old oak tree in the park has been growing for over a hundred years. Can you imagine all the things it has seen?",
+        "A rainbow appeared right over our house after the storm, and it looked like it was touching the ground in our garden!",
+        "The brave firefighter climbed the tall ladder and rescued the scared kitten from the very top branch of the tree.",
+        "We made friendship bracelets for everyone in the class, and each one had their favorite colors. It took us all weekend!",
+        "The baby panda at the zoo rolled down the hill and bumped into a pile of bamboo. Everyone laughed so hard!",
+        "Did you know that honeybees do a special dance to tell other bees where the best flowers are? How cool is that?",
+        "The inventor stayed up all night working on her new creation, and by morning she had built something truly amazing!",
+        "We spotted a shooting star while camping in the mountains, and everyone made a wish at the exact same time!",
+        "The little boat rocked gently on the waves, while we watched the sunset paint the sky in shades of pink and orange.",
+        "My best friend and I have a secret handshake that takes almost thirty seconds to do. Nobody else knows it but us!",
+        "The penguin waddled across the ice, slipped, and slid all the way down the hill on its belly. What a silly sight!",
+        "Every spring, the cherry blossom trees in our neighborhood burst into beautiful pink flowers. It is my favorite time of year!",
+        "The robot that the students built could actually pick up a ball and throw it into a basket. The crowd went wild!",
+        "We adopted a rescue dog from the shelter last month, and now she is the happiest member of our whole family!",
+        "The thunderstorm was so loud that the windows rattled, but we felt safe and cozy inside with our blankets and books.",
+        "A tiny hummingbird visited our garden every morning, hovering over the red flowers and drinking nectar with its long beak.",
+        "The treasure hunt at the birthday party had clues hidden all over the yard. Who do you think found the treasure first?",
+        "We learned how to make paper airplanes that could fly across the entire gymnasium! Mine flew the farthest of them all.",
+        "The sunset over the ocean was so beautiful that everyone on the beach stopped what they were doing just to watch.",
+        "Our class adopted a section of the highway and picked up trash every month. We made such a big difference!",
+        "The acrobat flipped through the air and landed perfectly on her feet. The crowd jumped up and cheered like crazy!",
+        "Did you know that octopuses have three hearts and blue blood? The ocean is full of the most amazing surprises!"
     ];
 
     const ALL_BANKS = [level1, level2, level3, level4, level5, level6, level7];
@@ -995,7 +1209,7 @@
     }
 
     // ============================================
-    // PARENT RESET (click title 5 times quickly)
+    // PARENT SETTINGS PANEL (click title 5x quickly)
     // ============================================
     let resetClicks = 0;
     let resetTimer = null;
@@ -1005,20 +1219,148 @@
         resetTimer = setTimeout(() => { resetClicks = 0; }, 2000);
         if (resetClicks >= 5) {
             resetClicks = 0;
-            if (confirm("Parent reset: This will erase all of Lily's progress (stars, animals, level). Are you sure?")) {
-                localStorage.removeItem(SAVE_KEY);
-                state = {
-                    totalStars: 0, level: 0, streak: 0, bestStreak: 0, bestWpm: 0,
-                    exercisesCompleted: 0, unlockedAnimals: [0], starsToNextAnimal: 8,
-                    starsSinceLastAnimal: 0, levelProgress: 0, recentSentences: [],
-                    sessionCount: 0, sessionDate: null
-                };
-                saveState();
-                updateAllUI();
-                loadExercise();
-            }
+            openParentPanel();
         }
     });
+
+    function openParentPanel() {
+        // Populate WPM
+        document.getElementById('parentWpmDisplay').textContent = state.bestWpm + ' WPM';
+        document.getElementById('parentWpmInput').value = state.bestWpm;
+
+        // Populate level select
+        const sel = document.getElementById('parentLevelSelect');
+        sel.innerHTML = '';
+        LEVELS.forEach((lvl, i) => {
+            const opt = document.createElement('option');
+            opt.value = i;
+            opt.textContent = `${i + 1}. ${lvl.icon} ${lvl.name}`;
+            if (i === state.level) opt.selected = true;
+            sel.appendChild(opt);
+        });
+
+        // Populate stars
+        document.getElementById('parentStarsInput').value = state.totalStars;
+
+        // Populate sticker grid
+        renderParentStickerGrid();
+
+        // Hide unlock-up-to row
+        document.getElementById('parentUnlockUpToRow').style.display = 'none';
+
+        document.getElementById('parentOverlay').classList.add('show');
+    }
+
+    function closeParentPanel() {
+        document.getElementById('parentOverlay').classList.remove('show');
+        typingInput.focus();
+    }
+
+    function renderParentStickerGrid() {
+        const grid = document.getElementById('parentStickerGrid');
+        grid.innerHTML = '';
+        ADVENTURE_ANIMALS.forEach((animal, i) => {
+            const cell = document.createElement('div');
+            cell.className = 'parent-sticker-cell';
+            if (state.unlockedAnimals.includes(i)) cell.classList.add('active');
+            cell.textContent = animal;
+            cell.title = ANIMAL_NAMES[i] + (state.unlockedAnimals.includes(i) ? ' ✓' : ' (locked)');
+            cell.addEventListener('click', () => toggleParentSticker(i));
+            grid.appendChild(cell);
+        });
+        document.getElementById('parentStickerStatus').textContent =
+            `${state.unlockedAnimals.length} of ${ADVENTURE_ANIMALS.length} unlocked — tap to toggle`;
+    }
+
+    function toggleParentSticker(index) {
+        if (state.unlockedAnimals.includes(index)) {
+            // Don't allow removing the first sticker (index 0)
+            if (index === 0) return;
+            state.unlockedAnimals = state.unlockedAnimals.filter(i => i !== index);
+        } else {
+            state.unlockedAnimals.push(index);
+            state.unlockedAnimals.sort((a, b) => a - b);
+        }
+        saveState();
+        renderParentStickerGrid();
+        updateAllUI();
+    }
+
+    // WPM controls
+    document.getElementById('parentWpmSet').addEventListener('click', () => {
+        const val = parseInt(document.getElementById('parentWpmInput').value) || 0;
+        state.bestWpm = Math.max(0, Math.min(200, val));
+        saveState();
+        document.getElementById('parentWpmDisplay').textContent = state.bestWpm + ' WPM';
+        updateAllUI();
+    });
+    document.getElementById('parentWpmReset').addEventListener('click', () => {
+        state.bestWpm = 0;
+        saveState();
+        document.getElementById('parentWpmDisplay').textContent = '0 WPM';
+        document.getElementById('parentWpmInput').value = 0;
+        updateAllUI();
+    });
+
+    // Level control
+    document.getElementById('parentLevelSet').addEventListener('click', () => {
+        const val = parseInt(document.getElementById('parentLevelSelect').value);
+        state.level = val;
+        state.levelProgress = 0;
+        saveState();
+        updateAllUI();
+        loadExercise();
+    });
+
+    // Sticker controls
+    document.getElementById('parentUnlockAll').addEventListener('click', () => {
+        state.unlockedAnimals = ADVENTURE_ANIMALS.map((_, i) => i);
+        saveState();
+        renderParentStickerGrid();
+        updateAllUI();
+    });
+    document.getElementById('parentUnlockUpTo').addEventListener('click', () => {
+        const row = document.getElementById('parentUnlockUpToRow');
+        row.style.display = row.style.display === 'none' ? 'flex' : 'none';
+    });
+    document.getElementById('parentUnlockCountGo').addEventListener('click', () => {
+        const count = parseInt(document.getElementById('parentUnlockCount').value) || 1;
+        const n = Math.max(1, Math.min(ADVENTURE_ANIMALS.length, count));
+        const unlocked = [];
+        for (let i = 0; i < n; i++) unlocked.push(i);
+        state.unlockedAnimals = unlocked;
+        saveState();
+        renderParentStickerGrid();
+        updateAllUI();
+        document.getElementById('parentUnlockUpToRow').style.display = 'none';
+    });
+
+    // Stars control
+    document.getElementById('parentStarsSet').addEventListener('click', () => {
+        const val = parseInt(document.getElementById('parentStarsInput').value) || 0;
+        state.totalStars = Math.max(0, Math.min(9999, val));
+        saveState();
+        updateAllUI();
+    });
+
+    // Full reset
+    document.getElementById('parentFullReset').addEventListener('click', () => {
+        if (confirm("This will erase ALL of Lily's progress (stars, stickers, level, WPM). Are you sure?")) {
+            localStorage.removeItem(SAVE_KEY);
+            state = {
+                totalStars: 0, level: 0, streak: 0, bestStreak: 0, bestWpm: 0,
+                exercisesCompleted: 0, unlockedAnimals: [0], starsToNextAnimal: 8,
+                starsSinceLastAnimal: 0, levelProgress: 0, recentSentences: [],
+                sessionCount: 0, sessionDate: null
+            };
+            saveState();
+            updateAllUI();
+            loadExercise();
+            closeParentPanel();
+        }
+    });
+
+    document.getElementById('closeParent').addEventListener('click', closeParentPanel);
 
     // ============================================
     // UI UPDATES
@@ -1030,6 +1372,7 @@
         document.getElementById('bestWpm').textContent = state.bestWpm + " WPM";
         renderMap();
         updateSessionInfo();
+        updateStickerProgress();
     }
 
     function renderMap() {
@@ -1065,6 +1408,34 @@
         }
     }
 
+    function updateStickerProgress() {
+        const progressEl = document.getElementById('stickerProgress');
+        const starsLeftEl = document.getElementById('spStarsLeft');
+        const barEl = document.getElementById('spBar');
+        const fractionEl = document.getElementById('spFraction');
+        const infoLabel = progressEl.querySelector('.sp-label');
+
+        if (state.unlockedAnimals.length >= ADVENTURE_ANIMALS.length) {
+            // All stickers collected!
+            progressEl.classList.add('all-done');
+            progressEl.querySelector('.sp-icon').textContent = '🎉';
+            infoLabel.innerHTML = '<span>All friends collected!</span>';
+            barEl.style.width = '100%';
+            fractionEl.textContent = `${ADVENTURE_ANIMALS.length}/${ADVENTURE_ANIMALS.length}`;
+        } else {
+            progressEl.classList.remove('all-done');
+            progressEl.querySelector('.sp-icon').textContent = '🎁';
+            const remaining = state.starsToNextAnimal - state.starsSinceLastAnimal;
+            const pct = state.starsToNextAnimal > 0
+                ? Math.min(100, (state.starsSinceLastAnimal / state.starsToNextAnimal) * 100)
+                : 0;
+            starsLeftEl.textContent = Math.max(0, remaining);
+            infoLabel.innerHTML = `Next friend in <span>${Math.max(0, remaining)}</span> ⭐`;
+            barEl.style.width = pct + '%';
+            fractionEl.textContent = `${state.starsSinceLastAnimal}/${state.starsToNextAnimal}`;
+        }
+    }
+
     // ============================================
     // EVENTS
     // ============================================
@@ -1083,6 +1454,7 @@
     document.addEventListener('keydown', e => {
         if (e.key === 'Enter' && document.getElementById('celebration').classList.contains('show')) hideCelebration();
         if (e.key === 'Escape' && document.getElementById('stickerOverlay').classList.contains('show')) closeStickerBook();
+        if (e.key === 'Escape' && document.getElementById('parentOverlay').classList.contains('show')) closeParentPanel();
     });
 
     // ============================================
