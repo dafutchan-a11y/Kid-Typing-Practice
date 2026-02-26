@@ -1281,9 +1281,17 @@
             state.unlockedAnimals.push(index);
             state.unlockedAnimals.sort((a, b) => a - b);
         }
+        recalcStickerProgress();
         saveState();
         renderParentStickerGrid();
         updateAllUI();
+    }
+
+    function recalcStickerProgress() {
+        // Reset progress toward next animal based on current unlock count
+        state.starsSinceLastAnimal = 0;
+        // Recalculate threshold: base 8, +2 per animal unlocked, max 20
+        state.starsToNextAnimal = Math.min(8 + (state.unlockedAnimals.length - 1) * 2, 20);
     }
 
     // WPM controls
@@ -1315,6 +1323,7 @@
     // Sticker controls
     document.getElementById('parentUnlockAll').addEventListener('click', () => {
         state.unlockedAnimals = ADVENTURE_ANIMALS.map((_, i) => i);
+        recalcStickerProgress();
         saveState();
         renderParentStickerGrid();
         updateAllUI();
@@ -1329,6 +1338,7 @@
         const unlocked = [];
         for (let i = 0; i < n; i++) unlocked.push(i);
         state.unlockedAnimals = unlocked;
+        recalcStickerProgress();
         saveState();
         renderParentStickerGrid();
         updateAllUI();
